@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import connectDB from './utils/db.js';
 dotenv.config({});
 import * as Sentry from "@sentry/node"
+import { clerkWebhooks } from './controllers/webhooks.js';
 
 
 app.get("/",(req,res) => {
@@ -20,6 +21,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
 
+app.post("/webhooks",clerkWebhooks)
 
 
 await connectDB()
