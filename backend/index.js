@@ -21,6 +21,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
 
+app.use("/webhooks", express.raw({ type: "application/json" }));
 app.post("/webhooks",clerkWebhooks)
 
 
@@ -33,7 +34,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
 
 
-const PORT=process.env.PORT || 5000;
+const PORT=process.env.PORT || 3000;
 
 Sentry.setupExpressErrorHandler(app);
 
