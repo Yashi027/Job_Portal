@@ -8,6 +8,7 @@ import connectDB from './utils/db.js';
 dotenv.config({});
 import * as Sentry from "@sentry/node"
 import { clerkWebhooks } from './controllers/webhooks.js';
+import companyRoutes from './routes/companyRoutes.js';
 
 
 app.get("/",(req,res) => {
@@ -23,7 +24,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 
 app.use("/webhooks", express.raw({ type: "application/json" }));
 app.post("/webhooks",clerkWebhooks)
-
+app.use('/api/company',companyRoutes)
 
 await connectDB()
 
