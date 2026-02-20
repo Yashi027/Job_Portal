@@ -9,6 +9,7 @@ dotenv.config({});
 import * as Sentry from "@sentry/node"
 import { clerkWebhooks } from './controllers/webhooks.js';
 import companyRoutes from './routes/companyRoutes.js';
+import JobRoutes from './routes/jobRoutes.js'
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.use('/api/company',companyRoutes)
+app.use('/api/jobs',JobRoutes)
 
 app.get("/",(req,res) => {
     return res.status(200).json({

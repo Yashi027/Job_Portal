@@ -2,6 +2,7 @@ import Company from "../models/Company.js";
 import bcrypt from 'bcryptjs';
 import {v2 as cloudinary} from 'cloudinary';
 import generateToken from "../utils/generateToken.js";
+import Job from "../models/Job.js";
 
 
 export const registerCompany = async (req,res) => {
@@ -76,7 +77,28 @@ export const getCompanyData = async (req,res) => {
 }
 
 export const jobPost = async (req,res) => {
-    const {title ,description ,location ,salary } = req.body
+    const {title ,description ,location ,salary, level, category } = req.body
+
+    const companyId = req.company._id
+    
+    try {
+        const newJob = new Job({
+            title,
+            description,
+            location,
+            salary,
+            companyId,
+            date:Date.now(),
+            level,
+            category
+        })
+    
+        await newJob.save()
+    
+        return res.status(200).json({success:true,newJob})
+    } catch (error) {
+        return res.status(500).json({success:false,message:error.message})
+    }
 }
 
 export const getCompanyJobApplicants = async (req,res) => {
