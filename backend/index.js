@@ -30,11 +30,12 @@ app.post("/webhooks",clerkWebhooks)
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
-app.use(clerkMiddleware())
+
 
 
 app.use('/api/company',companyRoutes)
 app.use('/api/jobs',jobRoutes)
+app.use(clerkMiddleware())
 app.use('/api/users',userRoutes)
 
 app.get("/",(req,res) => {

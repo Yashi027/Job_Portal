@@ -15,6 +15,7 @@ export const registerCompany = async (req,res) => {
 
     try {
         const companyExists = await Company.findOne({email})
+        
         if(companyExists){
             return res.json({success:false,message:"Company already registered"})
         }
@@ -52,7 +53,11 @@ export const loginCompany = async (req,res) => {
     const {email,password} = req.body
     try {
         const company = await Company.findOne({email})
-        if(bcrypt.compare(password,company.password)){
+        if(!company){
+            return res.json({success:false, message:"Invalid Email or Password"})
+        }
+
+        if(await bcrypt.compare(password,company.password)){
             res.json({
                 success:true,
                 company:{
@@ -136,7 +141,7 @@ export const changeVisiblity = async (req,res) => {
         const job = await Job.findById(id)
 
         if(companyId.toString() === job.companyId.toString()){
-            jobvisible = !jobvisible
+            job.visible = !job.visible
         }
 
         await job.save()
