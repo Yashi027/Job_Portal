@@ -24,12 +24,10 @@ function App() {
       <Route path='/' element={<Home/>}/>
       <Route path='/applications' element={<Applications/>}/>
       <Route path='/apply-job/:id' element={<ApplyJob/>}/>
-      <Route path='/dashboard' element={<Dashboard/>}>
-        {companyToken ? <>
+      <Route path='/dashboard' element={<Dashboard/>}>       
           <Route path='add-job' element={<AddJob/>}/>
           <Route path='manage-jobs' element={<ManageJob/>}/>
           <Route path='view-applications' element={<ViewApplication/>}/>
-        </>: <></>}
       </Route>
       
     </Routes>
