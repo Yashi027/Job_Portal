@@ -3,10 +3,11 @@ import Company from '../models/Company.js'
 
 
 export const protectCompany = async (req,res,next) => {
-    const token = req.headers.token;
+    const token = await req.headers.token;
     if(!token){
-        return res.json({success:false, message:"Not Authorised, Login Again"})
+        return res.json({success:false, message:"Not Authorised Login Again"})
     }
+    console.log("TOKEN:", token)
 
     try {
         const decoded = jwt.verify(token,process.env.JWT_SECRET)

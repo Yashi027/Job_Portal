@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Navbar from '../components/Navbar'
 import { assets, jobsApplied } from '../assets/assets'
 import moment from 'moment'
 import Footer from '../components/Footer'
+import { AppContext } from '../context/AppContext'
+import { useUser } from '@clerk/clerk-react'
 
 const Applications = () => {
-
+  const {user} = useUser()
   const [isEdit, setIsEdit] = useState(false)
   const [resume,setResume] = useState(null)
+
+  const {backendUrl, userData, userApplications,fetchUserData} = useContext(AppContext)
+
+  const updateResume = async () => {
+    
+  }
   return (
     <>
       <Navbar/>

@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import { jobsData } from "../assets/assets";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 export const AppContext = createContext()
 
@@ -9,6 +9,9 @@ export const AppContext = createContext()
 export const AppContextProvider = (props) => {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
+
+    const {user} = useUser()
+    const {getToken} = useAuth()
 
     const [searchFilter, setSearchFilter] = useState(
         {title:'',
@@ -23,6 +26,8 @@ export const AppContextProvider = (props) => {
 
     const [companyToken,setCompanyToken] = useState(null)
     const [companyData,setCompanyData] = useState(null)
+    const [userData, setUserData] = useState(null)
+    const [userApplications, setUserApplications] = useState([])
 
     const fetchJobs = async () => {
         try {
@@ -53,6 +58,28 @@ export const AppContextProvider = (props) => {
         }
     }
 
+    const fetchUserData = async () => {
+        try {
+            const token = await getToken()
+            const {data} = await axios.get(backendUrl+'/api/users/user',
+                {headers:{Authorization:`Bearer ${token}`}})
+
+                if(data.success){
+                    setUserData(data.user)
+                }else{
+                    toast.error(data.message)
+                }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
+    useEffect(() => {
+        if(user){
+            fetchUserData()
+        }
+    },[user])
+
     useEffect(() => {
         fetchJobs()
         const storedCompanyToken = localStorage.getItem('companyToken')
@@ -63,7 +90,9 @@ export const AppContextProvider = (props) => {
     },[])
 
     useEffect(() => {
+        if(companyToken){
         fetchCompanyData()
+        }
     },[companyToken])
     const value = {
         searchFilter,
@@ -78,7 +107,12 @@ export const AppContextProvider = (props) => {
         setCompanyToken,
         companyData,
         setCompanyData,
-        backendUrl
+        backendUrl,
+        userApplications,
+        setUserApplications,
+        userData,
+        setUserData,
+        fetchUserData
     }
 
     return(
