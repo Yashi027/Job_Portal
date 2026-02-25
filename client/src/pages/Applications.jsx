@@ -73,13 +73,13 @@ const Applications = () => {
             </tr>
           </thead>
           <tbody>
-            {jobsApplied.map((job,index) => true ? (
-              <tr>
-                <td className='px-4 py-3 flex items-center border-b gap-2'> <img className='h-8 w-8' src={job.logo} alt="" /> {job.company}</td>
-                <td className='py-2 px-4 border-b'>{job.title}</td>
-                <td className='py-2 px-4 border-b max-sm:hidden'>{job.location}</td>
-                <td className='py-2 px-4 border-b max-sm:hidden'>{moment(job.date).format('ll')}</td>
-                <td className='py-2 px-4 border-b'>
+            {userApplications.map((job,index) => true ? (
+              <tr key={index}>
+                <td className='px-2 py-3 flex items-center border-b gap-2'> <img className='h-8 w-8' src={job.companyId.image} alt="" /> {job.companyId.name}</td>
+                <td className='px-2 py-3 border-b text-left'>{job.jobId.title}</td>
+                <td className='py-3 px-2 border-b text-left max-sm:hidden'>{job.jobId.location}</td>
+                <td className='py-3 px-2 border-b text-left max-sm:hidden'>{moment(job.date).format('ll')}</td>
+                <td className='py-3 px-2 border-b text-left'>
                   <span className={`${job.status === "Accepted" ? 'bg-green-100' : job.status === "Rejected" ? 'bg-red-100' : 'bg-blue-100'} px-4 py-1.5 rounded`} >{job.status}</span>
                 </td>
               </tr>
