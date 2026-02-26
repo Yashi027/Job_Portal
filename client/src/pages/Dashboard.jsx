@@ -52,7 +52,7 @@ const Dashboard = () => {
             <ul className='flex flex-col items-start pt-5 text-gray-800'>
                 <NavLink className={({isActive}) => `flex items-center gap-2 p-3 sm:px-6 w-full hover:bg-blue-100 ${isActive && 'bg-blue-100 border-r-4 border-blue-500'}`} to={'/dashboard/add-job'}>
                 <img className='min-w-4' src={assets.add_icon} alt="" />
-                <p className='max-sm:hidden'>Add Job</p>
+                <p >Add Job</p>
                 </NavLink>
 
                 <NavLink className={({isActive}) => `flex items-center gap-2 p-3 sm:px-6 w-full hover:bg-blue-100 ${isActive && 'bg-blue-100 border-r-4 border-blue-500'}`} to={'/dashboard/manage-jobs'}>
@@ -66,7 +66,7 @@ const Dashboard = () => {
                 </NavLink>
             </ul>
         </div>
-        <div>
+        <div className='flex-1 h-full p-2 sm:p-5'>
             <Outlet/>
         </div>
       </div>

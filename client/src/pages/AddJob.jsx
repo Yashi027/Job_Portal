@@ -53,7 +53,7 @@ const AddJob = () => {
 
   return (
     <form className='container flex flex-col gap-3 p-4 w-full items-start' onSubmit={onSubmitHandler}>
-      <div className='w-full'>
+      <div className='w-full max-w-lg'>
         <p className='mb-2'>Job Title</p>
         <input type="text" placeholder='Type here' 
         onChange={e => setTitle(e.target.value)} value={title}

@@ -1,9 +1,10 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { assets, viewApplicationsPageData } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useEffect } from 'react'
+import Loading from '../components/Loading'
 
 const ViewApplication = () => {
 
@@ -26,12 +27,30 @@ const ViewApplication = () => {
     }
   }
 
+  const changeJobApplicationStatus = async (id,status) => {
+    try {
+      const {data} = await axios.post(backendUrl+'/api/company/change-status',
+        {id,status},{headers:{token:companyToken}}
+      )
+
+      if(data.success){
+        fetchCompanyJobApplications()
+      }else{
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
   useEffect(() => {
     if(companyToken){
       fetchCompanyJobApplications()
     }
   },[companyToken])
-  return (
+  return applicants ? applicants.length === 0 ? (<div className='flex items-center justify-center h-[70vh]'>
+    <p className='text-xl sm:text-2xl'>No Applications Available</p>
+  </div>) : (
     <div className='container mx-auto p-4'>
       <div>
         <table className='w-full border border-gray-200 max-w-4xl bg-white max-sm:text-sm'>
@@ -46,33 +65,35 @@ const ViewApplication = () => {
             </tr>
           </thead>
           <tbody>
-            {viewApplicationsPageData.map((applicant,index) => (
+            {applicants.filter(item => item.jobId && item.userId).map((applicant,index) => (
               <tr key={index} className='text-gray-700'>
                 <td className='py-2 px-4 text-center border-b'>{index+1}</td>
-                <td className='py-2 px-4 text-center border-b flex'>
-                  <img className='w-10 h-10 rounded-full mr-3 max-sm:hidden' src={applicant.imgSrc} alt="" />
-                  <span>{applicant.name}</span>
+                <td className='py-2 px-4 text-center border-b flex items-center'>
+                  <img className='w-10 h-10 rounded-full mr-3 max-sm:hidden' src={applicant.userId.image} alt="" />
+                  <span>{applicant.userId.name}</span>
                 </td>
                 <td className='py-2 px-4 max-sm:hidden border-b'>
-                  {applicant.jobTitle}
+                  {applicant.jobId.title}
                 </td>
                 <td className='py-2 px-4 max-sm:hidden border-b'>
-                  {applicant.location}
+                  {applicant.jobId.location}
                 </td>
                 <td className=' py-2 px-4 border-b'>
-                  <a href="" target='_blank'
+                  <a href={applicant.userId.resume} target='_blank'
                   className='bg-blue-50 rounded gap-2 flex items-center text-blue-400 px-3 py-1'> Resume 
                     <img src={assets.resume_download_icon} alt="" />
                   </a>
                 </td>
                 <td className=' py-2 px-4 border-b relative'>
-                  <div className='relative inline-block text-left group'>
+                  {applicant.status === "pending" 
+                  ? <div className='relative inline-block text-left group'>
                     <button className='text-gray-500 action-button'>...</button>
                     <div className='z-10 hidden absolute md:left-0 right-0 top-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow group-hover:block'>
-                      <button className='block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100'>Accept</button>
-                      <button className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100'>Reject</button>
+                      <button onClick={() => changeJobApplicationStatus(applicant._id,'Accepted')} className='block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100'>Accept</button>
+                      <button onClick={() => changeJobApplicationStatus(applicant._id,'Rejected')} className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100'>Reject</button>
                     </div>
                   </div>
+                  : <div>{applicant.status}</div>}
                 </td>
               </tr>
             ))}
@@ -80,7 +101,7 @@ const ViewApplication = () => {
         </table>
       </div>
     </div>
-  )
+  ): <Loading/>
 }
 
 export default ViewApplication
